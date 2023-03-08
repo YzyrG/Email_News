@@ -7,8 +7,12 @@ import requests
 import send_emails
 
 api_key = "3a87d35100f44f459716ca23be0ddab7"
-url = "https://newsapi.org/v2/everything?q=tesla&from=2023-02-08&" \
-      "sortBy=publishedAt&apiKey=3a87d35100f44f459716ca23be0ddab7"
+topic = "war"
+url = "https://newsapi.org/v2/everything?" \
+      f"q={topic}&" \
+      "from=2023-02-08&" \
+      "sortBy=publishedAt&" \
+      "apiKey=3a87d35100f44f459716ca23be0ddab7"
 
 # 请求
 request = requests.get(url)
@@ -18,11 +22,12 @@ content = request.json()
 
 # 生成news
 news = ""
-for article in content['articles']:
-    title = article['title']
-    description = article['description']
-    url = article['url']
-    news += f"Title: {title}\n Description: {description}\n {url}\n\n"
+for article in content['articles'][:20]:
+    if article["title"] is not None:
+        title = article['title']
+        description = article['description']
+        url = article['url']
+        news += f"Title: {title}\n Description: {description}\n {url}\n\n"
 
 # 构造邮件
 message = str(send_emails.create_email("Yahoo!", news))
