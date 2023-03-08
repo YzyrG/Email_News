@@ -1,4 +1,10 @@
+"""
+Request news by  use api
+"""
+# coding=utf-8
+
 import requests
+import send_emails
 
 api_key = "3a87d35100f44f459716ca23be0ddab7"
 url = "https://newsapi.org/v2/everything?q=tesla&from=2023-02-08&" \
@@ -8,8 +14,17 @@ url = "https://newsapi.org/v2/everything?q=tesla&from=2023-02-08&" \
 request = requests.get(url)
 # 获取dictionary data, request.text是string，requeston.json才是dictionary
 content = request.json()
+# print(content)
 
-# 拿到文章title和description
+# 生成news
+news = ""
 for article in content['articles']:
-    print(article['title'])
-    print(article['description'])
+    title = article['title']
+    description = article['description']
+    url = article['url']
+    news += f"Title: {title}\n Description: {description}\n {url}\n\n"
+
+# 构造邮件
+message = str(send_emails.create_email("Yahoo!", news))
+# 发送邮件
+send_emails.send_email(message)
