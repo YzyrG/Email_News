@@ -5,14 +5,17 @@ Request news by  use api
 
 import requests
 import send_emails
+import os
 
-api_key = "3a87d35100f44f459716ca23be0ddab7"
-topic = "war"
-url = "https://newsapi.org/v2/everything?" \
-      f"q={topic}&" \
-      "from=2023-02-08&" \
-      "sortBy=publishedAt&" \
-      "apiKey=3a87d35100f44f459716ca23be0ddab7"
+api_key = os.getenv("NEWS_API")
+category = "guoji"
+url = "http://v.juhe.cn/toutiao/index?" \
+      f"type={category}&" \
+      "page=1&" \
+      "page_size=20&" \
+      "is_filter=1&" \
+      "key=f780d600201b82df140b910357a7db9c"
+
 
 # 请求
 request = requests.get(url)
@@ -22,14 +25,14 @@ content = request.json()
 
 # 生成news
 news = ""
-for article in content['articles'][:20]:
+for article in content['result']['data']:
     if article["title"] is not None:
         title = article['title']
-        description = article['description']
+        author = article['author_name']
         url = article['url']
-        news += f"Title: {title}\n Description: {description}\n {url}\n\n"
+        news += f"Title: {title}\n Author: {author}\n {url}\n\n"
 
 # 构造邮件
-message = str(send_emails.create_email("Yahoo!", news))
+message = str(send_emails.create_email("头条", news))
 # 发送邮件
 send_emails.send_email(message)

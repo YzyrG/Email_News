@@ -1,6 +1,7 @@
 """
 Send news to email
 """
+# coding=utf-8
 
 import smtplib
 import ssl
@@ -14,7 +15,7 @@ def create_email(news_source, news):
     msg = MIMEText(news, 'plain', 'utf-8')
     msg["From"] = formataddr(("My News App", "15683966878@163.com"))
     msg["To"] = formataddr(("ZYR", "2456327328@qq.com"))
-    msg['Subject'] = f"Check out fresh faience news from {news_source}"
+    msg['Subject'] = f"请查看来自{news_source}的新闻！"
     return msg
 
 
